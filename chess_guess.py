@@ -1,5 +1,4 @@
 from top_players import get_player_name
-from bidict import bidict
 import numpy as np
 import tensorflow as tf
 
@@ -17,8 +16,20 @@ piece_to_int = {
         'k':26,
         'K':16,
     }
-int_to_piece = bidict(piece_to_int).inverse
-
+int_to_piece = {
+        21:'p',
+        11:'P',
+        22:'n',
+        12:'N',
+        23:'b',
+        13:'B',
+        24:'r',
+        14:'R',
+        25:'q',
+        15:'Q',
+        26:'k',
+        16:'K',
+    }
 
 def get_chess_guesses(fen):
     # Split into lines
@@ -27,12 +38,12 @@ def get_chess_guesses(fen):
     black_model = tf.keras.models.load_model('./black_player_model')
     white_output = white_model.predict(game).ravel()
     black_output = black_model.predict(game).ravel()
-    print(white_output.argmax())
     white_sum = sum(white_output)
     black_sum = sum(black_output)
     whiteGuesses = []
     blackGuesses = []
     for i in range(10):
+        print(white_output.argmax())
         white_player = str(get_player_name(white_output.argmax()))
         black_player = str(get_player_name(black_output.argmax()))
         white_player_certainty = white_output[white_output.argmax()]/white_sum
@@ -43,6 +54,7 @@ def get_chess_guesses(fen):
             blackGuesses.append([black_player, "{cert:.2f}%".format(cert=100*black_player_certainty)])
         white_output[white_output.argmax()] = -1.0
         black_output[black_output.argmax()] = -1.0
+        print(white_player)
     return {'whiteGuesses': whiteGuesses, 'blackGuesses': blackGuesses}
 
 def numeric_to_fen(numeric_game):
@@ -88,3 +100,7 @@ def fen_to_numeric(fen):
     game = np.array(game).T
     game_tensor = tf.convert_to_tensor([game])
     return game_tensor
+
+fen = 'r4rk1/2pnqppp/pp1b4/3b4/1P1Pn3/PQ1BPN2/R4PPP/2B2RK1 w - - 0 14'
+
+print(get_chess_guesses(fen))
