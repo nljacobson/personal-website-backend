@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import chess_guess
 import QHO
+from WordleHard import WordleHard
 import json
 app = Flask(__name__)
 allowed_origins = ["*"]
@@ -36,6 +37,19 @@ def index():
    print('Request for index page received')
    return '<div>HELLO WORLD</div>'
 
+@app.route('/api/wordleguess', methods=['POST'])
+def guess():
+    guesses:list[str] = request.args.get('guesses')
+    word = request.args.get('word')
+    guess = request.args.get('guess')
+    game = WordleHard(word, guesses)
+    guess_result = game.guess(guess)
+    game_data = json.dumps([
+        {'guessResult': guess_result}, 
+        {'guesses': game.get_guesses_list()},
+        {'letterColors': game.get_letter_colors_list()}
+        ])
+    return game_data
+
 if __name__ == '__main__':
     app.run()
-    #app.run(ssl_context='adhoc', port=5000)
