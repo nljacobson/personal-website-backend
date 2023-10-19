@@ -37,17 +37,26 @@ def index():
    print('Request for index page received')
    return '<div>HELLO WORLD</div>'
 
+@app.route('/api/wordlecreate', methods=['GET'])
+def createwordle():
+    game = WordleHard()
+    game_data = json.dumps([
+        {'guesses': game.get_guesses_list()},
+        {'letterColors': game.get_letter_colors_list()},
+        {'word': game.get_word()}
+        ])
+    return game_data
 @app.route('/api/wordleguess', methods=['POST'])
 def guess():
-    guesses:list[str] = request.args.get('guesses')
+    guesses = request.args.get('guesses')
     word = request.args.get('word')
     guess = request.args.get('guess')
     game = WordleHard(word, guesses)
     guess_result = game.guess(guess)
     game_data = json.dumps([
-        {'guessResult': guess_result}, 
         {'guesses': game.get_guesses_list()},
-        {'letterColors': game.get_letter_colors_list()}
+        {'letterColors': game.get_letter_colors_list()},
+        {'word': game.get_word()}
         ])
     return game_data
 

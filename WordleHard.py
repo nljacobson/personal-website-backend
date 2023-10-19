@@ -24,7 +24,6 @@ class WordleHard:
         self.guess_output_factory = GuessOutput.GuessOutputFactory()
         self.playing = True
         self.guesses = []
-        print(type(guesses))
         for guess in guesses:
             self.guess(guess)
     def guess(self, guess: str) -> str:
