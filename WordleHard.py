@@ -3,12 +3,10 @@ import GuessOutput
 
 class WordleHard:
     max_guesses = 6
-    def __init__(self, word:str=None):
+    def __init__(self):
         self.wordlist = self.get_word_list()
         self.guesslist = self.get_guess_list()
-        if word == None:
-            word = random.choice(self.wordlist)
-        self.word = word
+        self.word = random.choice(self.wordlist)
         self.guesses = []
         self.possibilities = self.guesslist.copy()
         self.guess_count = 0
