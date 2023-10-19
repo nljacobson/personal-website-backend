@@ -46,6 +46,7 @@ def createwordle():
         {'word': game.get_word()}
         ])
     return game_data
+
 @app.route('/api/wordleguess', methods=['POST'])
 def guess():
     guesses = request.args.get('guesses')
