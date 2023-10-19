@@ -11,13 +11,13 @@ class WordleHard:
             self.word = random.choice(self.wordlist)
         self.word = word
         self.possibilities = self.guesslist.copy()
-        self.guess_count = len(guesses)
         self.guess_output_factory = GuessOutput.GuessOutputFactory()
         self.playing = True
         self.guesses = []
         if guesses is not None:
             for guess in guesses:
                 self.guess(guess)
+        self.guess_count = len(guesses)
     def guess(self, guess: str) -> str:
         if not self.playing:
             return 'Game is over'
