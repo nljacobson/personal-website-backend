@@ -8,8 +8,8 @@ class WordleHard:
         self.wordlist = self.get_word_list()
         self.guesslist = self.get_guess_list()
         if word is None:
-            self.word = random.choice(self.wordlist)
-            self.word = 'cigar'
+            word = random.choice(self.wordlist)
+            print(word)
         self.word = word
         self.possibilities = self.guesslist.copy()
         self.guess_output_factory = GuessOutput.GuessOutputFactory()
