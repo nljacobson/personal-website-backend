@@ -16,9 +16,9 @@ class WordleHard:
         self.playing = True
         self.guesses = []
         if guesses is not None:
+            self.guess_count = len(guesses)
             for guess in guesses:
                 self.guess(guess)
-        self.guess_count = len(self.guesses)
     def guess(self, guess: str) -> str:
         if not self.playing:
             return 'Game is over'

@@ -35,7 +35,7 @@ def test_post():
 @app.route('/')
 def index():
    print('Request for index page received')
-   return '<div>HELLO WORLD</div>'
+   return '<div></div>'
 
 @app.route('/api/wordlecreate', methods=['GET'])
 def createwordle():
@@ -49,11 +49,16 @@ def createwordle():
 
 @app.route('/api/wordleguess', methods=['POST'])
 def guess():
-    guesses = request.args.get('guesses')
-    word = request.args.get('word')
-    guess = request.args.get('guess')
-    game = WordleHard(word, guesses)
-    guess_result = game.guess(guess)
+    guesses = request.args.get('guesses')[1:-1].split(" ")
+    new_guesses = []
+    for guess in guesses:
+        if guess[-1] == ',':
+            guess = guess[0:-1]
+        new_guesses.append(guess[1:-1])
+    word = request.args.get('word')[1:-1]
+    print(word)
+    game = WordleHard(word, new_guesses)
+    guess_result = game.guess(new_guesses[-1])
     game_data = json.dumps([
         {'guesses': game.get_guesses_list()},
         {'letterColors': game.get_letter_colors_list()},
