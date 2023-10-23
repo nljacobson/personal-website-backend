@@ -1,18 +1,11 @@
 class GuessOutput:
     def __init__(self, guess:str, word:str):
-        self.wordlist = self._get_word_list()
         self.word = word
         self.guess = guess
         self.letter_colors = self._create_letter_colors(self.guess, self.word)
         self.mask = self._create_mask(self.guess, self.word)
         self.req_letters = self._create_req_letters(self.guess, self.word)
 
-    def _get_word_list(self):
-        file = open('wordlist.txt')
-        wordlist = []
-        while line := file.readline():
-            wordlist.append(line.rstrip())
-        return wordlist
 
     def _create_letter_colors(self, guess:str, word:str):
         letter_colors = ''
@@ -86,9 +79,5 @@ class GuessOutput:
 class GuessOutputFactory:
     def create_guess_output(self, guess:str, word:str):
         guess_output = GuessOutput(guess, word)
-        if guess not in guess_output.wordlist:
-            return 'Guess not in wordlist'
-        if word not in guess_output.wordlist:
-            return 'Word not in wordlist'
         return guess_output
 

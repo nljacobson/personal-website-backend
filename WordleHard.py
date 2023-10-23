@@ -9,30 +9,30 @@ class WordleHard:
         self.guesslist = self.get_guess_list()
         if word is None:
             word = random.choice(self.wordlist)
-            print(word)
         self.word = word
         self.possibilities = self.guesslist.copy()
         self.guess_output_factory = GuessOutput.GuessOutputFactory()
         self.playing = True
+        self.guess_count = 0
         self.guesses = []
         if guesses is not None:
-            self.guess_count = len(guesses)
             for guess in guesses:
                 self.guess(guess)
-    def guess(self, guess: str) -> str:
+    def guess(self, guess: str) -> int:
         if not self.playing:
-            return 'Game is over'
+            return 2
         if guess not in self.get_possibilities():
-            return 'Not a valid word'
+            return 1
         guess_output = self.guess_output_factory.create_guess_output(guess, self.get_word())
-        self.guess_count += 1
-        if guess_output.get_letter_colors() == 'GGGGG':
-            self.playing = False
-        if self.guess_count > self.max_guesses:
-            self.playing = False
-        self.append_guesses(guess_output)
-        self.narrow_possibilities()
-        return 'Valid Guess'
+        if type(guess_output) == GuessOutput.GuessOutput:
+            self.guess_count += 1
+            if guess_output.get_letter_colors() == 'GGGGG':
+                self.playing = False
+            if self.guess_count >= self.max_guesses:
+                self.playing = False
+            self.append_guesses(guess_output)
+            self.narrow_possibilities()
+            return 0
     def narrow_possibilities(self) -> None:
         last_guess = self.get_last_guess()
         if last_guess == None:
@@ -52,6 +52,8 @@ class WordleHard:
                 new_possibilities.append(p)
         self.set_possibilities(new_possibilities)
     # Getters
+    def get_playing(self) -> bool:
+        return self.playing
     def get_word(self) -> str:
         return self.word
     def get_guesses(self) -> list[GuessOutput.GuessOutput]:

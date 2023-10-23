@@ -3,6 +3,7 @@ from flask_cors import CORS
 import chess_guess
 import QHO
 from WordleHard import WordleHard
+from GuessOutput import GuessOutput
 import json
 app = Flask(__name__)
 allowed_origins = ["*"]
@@ -40,31 +41,52 @@ def index():
 @app.route('/api/wordlecreate', methods=['GET'])
 def createwordle():
     game = WordleHard()
-    game_data = json.dumps([
-        {'guesses': game.get_guesses_list()},
-        {'letterColors': game.get_letter_colors_list()},
-        {'word': game.get_word()}
-        ])
+    game_data = json.dumps(
+        {
+        'result' : 0,    
+        'guesses': transform_guesses(game.get_guesses_list()),
+        'letterColors': transform_colors(game.get_letter_colors_list()),
+        'word': game.get_word()}
+        )
     return game_data
 
 @app.route('/api/wordleguess', methods=['POST'])
 def guess():
-    guesses = request.args.get('guesses')[1:-1].split(" ")
+    run_data = request.json['params']['run_data']
+    guesses = run_data['guesses']
     new_guesses = []
     for guess in guesses:
-        if guess[-1] == ',':
-            guess = guess[0:-1]
-        new_guesses.append(guess[1:-1])
-    word = request.args.get('word')[1:-1]
-    print(word)
-    game = WordleHard(word, new_guesses)
-    guess_result = game.guess(new_guesses[-1])
-    game_data = json.dumps([
-        {'guesses': game.get_guesses_list()},
-        {'letterColors': game.get_letter_colors_list()},
-        {'word': game.get_word()}
-        ])
+        if guess != '     ':
+            new_guesses.append(guess)
+    word = run_data['word']
+    game = WordleHard(word, new_guesses[:-1])
+    guessResult = game.guess(new_guesses[-1])
+    game_data = json.dumps(
+        {
+        'result' : guessResult,    
+        'guesses': transform_guesses(game.get_guesses_list()),
+        'letterColors': transform_colors(game.get_letter_colors_list()),
+        'word': game.get_word(),
+        'num_possibilities': len(game.get_possibilities()),
+        'playing': game.get_playing()}
+        )
     return game_data
 
+#Implementation specific transform patterns for frontend rendering
+def transform_guesses(guess_objects: list[str]):
+    new_guesses = []
+    for guess in guess_objects:
+        new_guesses.append(guess)
+    for i in range(len(new_guesses), 6):
+        new_guesses.append('     ')
+    return new_guesses
+
+def transform_colors(color_objects: list[str]):
+    new_colors = []
+    for color in color_objects:
+        new_colors.append(color)
+    for i in range(len(new_colors), 6):
+        new_colors.append('WWWWW')
+    return new_colors
 if __name__ == '__main__':
     app.run()
