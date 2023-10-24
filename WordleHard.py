@@ -4,7 +4,7 @@ import GuessOutput
 class WordleHard:
     max_guesses = 6
     # Constructor for mid game api call
-    def __init__(self, word = None, guesses: list[str] = None):
+    def __init__(self, word = None):
         self.wordlist = self.get_word_list()
         self.guesslist = self.get_guess_list()
         if word is None:
@@ -15,9 +15,6 @@ class WordleHard:
         self.playing = True
         self.guess_count = 0
         self.guesses = []
-        if guesses is not None:
-            for guess in guesses:
-                self.guess(guess)
     def guess(self, guess: str) -> int:
         if not self.playing:
             return 2

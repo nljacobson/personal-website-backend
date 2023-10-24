@@ -95,7 +95,7 @@ def fen_to_numeric(fen):
                 for i in range(int(input_item)):
                     output_row.append(0)
             else:
-                assert false
+                assert False
         game.append(output_row)
     game = np.array(game).T
     game_tensor = tf.convert_to_tensor([game])

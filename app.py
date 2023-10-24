@@ -58,11 +58,13 @@ def guess():
         if guess != '     ':
             new_guesses.append(guess)
     word = run_data['word']
-    game = WordleHard(word, new_guesses[:-1])
-    guessResult = game.guess(new_guesses[-1])
+    game = WordleHard(word)
+    guess_result = 4 # No guesses error
+    for guess in new_guesses:
+        guess_result = game.guess(guess)
     game_data = json.dumps(
         {
-        'result' : guessResult,    
+        'result' : guess_result,    
         'guesses': transform_guesses(game.get_guesses_list()),
         'letterColors': transform_colors(game.get_letter_colors_list()),
         'word': game.get_word(),
