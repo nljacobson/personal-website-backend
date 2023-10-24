@@ -1,6 +1,5 @@
 import numpy as np
-from numpy.fft import fft, ifft, rfft, irfft
-import matplotlib.pyplot as plt
+from numpy.fft import fft, ifft
 
 # Constants (Normally this are variable in exploratory version of code)
 tol = 10**-9
