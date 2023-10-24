@@ -3,7 +3,6 @@ from flask_cors import CORS
 import chess_guess
 import QHO
 from WordleHard import WordleHard
-from GuessOutput import GuessOutput
 import json
 app = Flask(__name__)
 allowed_origins = ["*"]
